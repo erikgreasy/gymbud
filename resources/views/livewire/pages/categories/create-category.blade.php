@@ -8,7 +8,7 @@
         </div>
 
         <div>
-            <x-button type="submit">Save</x-button>
+            <x-button type="submit" button>Save</x-button>
         </div>
     </form>
 </div>
