@@ -20,14 +20,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', Home::class)->name('home');
+Route::middleware('auth')->group(function () {
+    Route::get('/', Home::class)->name('home');
 
-Route::get('session/create', Create::class)->name('sessions.create');
-Route::get('session/{session}', Show::class)->name('sessions.show');
+    Route::get('session/create', Create::class)->name('sessions.create');
+    Route::get('session/{session}', Show::class)->name('sessions.show');
 
-Route::get('sessions/{session}/records/create', CreateRecord::class)->name('records.create');
-Route::get('sessions/{session}/records/{record}/edit', EditRecord::class)->name('records.edit');
+    Route::get('sessions/{session}/records/create', CreateRecord::class)->name('records.create');
+    Route::get('sessions/{session}/records/{record}/edit', EditRecord::class)->name('records.edit');
 
-Route::get('categories/create', CreateCategory::class)->name('categories.create');
+    Route::get('categories/create', CreateCategory::class)->name('categories.create');
 
-Route::get('exercises/create', CreateExercise::class)->name('exercises.create');
+    Route::get('exercises/create', CreateExercise::class)->name('exercises.create');
+});
+
+require __DIR__ . '/auth.php';
