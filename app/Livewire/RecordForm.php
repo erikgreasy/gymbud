@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Livewire\Pages\Records;
+namespace App\Livewire;
 
-use App\Models\Exercise;
-use App\Models\Session;
+use App\Models\Record;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 
-class CreateRecord extends Component
+class RecordForm extends Component
 {
-    public Session $session;
+    public ?Record $record = null;
 
     public $exercises;
+
+    public $session;
 
     #[Rule(['required', 'exists:exercises,id'])]
     public $exerciseId = null;
@@ -25,12 +26,17 @@ class CreateRecord extends Component
     #[Rule(['nullable', 'string'])]
     public $comment;
 
-    public function mount(): void
+    public function mount()
     {
-        $this->exercises = Exercise::all();
+        if ($this->record) {
+            $this->exerciseId = $this->record->exercise_id;
+            $this->weight = $this->record->weight;
+            $this->reps = $this->record->reps;
+            $this->comment = $this->record->comment;
+        }
     }
 
-    public function storeRecord(): void
+    public function submit()
     {
         $data = $this->validate();
 
@@ -46,6 +52,6 @@ class CreateRecord extends Component
 
     public function render()
     {
-        return view('livewire.pages.records.create-record');
+        return view('livewire.record-form');
     }
 }

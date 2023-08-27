@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Livewire\Pages\Sessions;
+namespace App\Livewire;
 
 use App\Models\Session;
 use Carbon\Carbon;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 
-class Create extends Component
+class NewSessionForm extends Component
 {
     #[Rule(['required', 'date'])]
     public $date;
 
-    public function mount(): void
+    public function mount()
     {
         $this->date = today()->toDateString();
     }
 
-    public function startSession(): void
+    public function submit()
     {
         $this->validate();
 
@@ -30,6 +30,6 @@ class Create extends Component
 
     public function render()
     {
-        return view('livewire.pages.sessions.create');
+        return view('livewire.new-session-form');
     }
 }
