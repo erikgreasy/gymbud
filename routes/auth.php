@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,9 @@ Route::middleware('guest')->group(function () {
         ->name('register');
 
     Route::post('register', [RegisteredUserController::class, 'store']);
+
+    Route::get('google-login', [GoogleAuthController::class, 'redirect']);
+    Route::get('google-callback', [GoogleAuthController::class, 'callback']);
 });
 
 Route::middleware('auth')->group(function () {
