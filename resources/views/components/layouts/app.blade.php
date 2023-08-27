@@ -7,6 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Gymbud</title>
 
+    <link rel="manifest" href="manifest.webmanifest"/>
+    <!-- ios support -->
+    <link rel="apple-touch-icon" href="/icon-192x192.png"/>
+    <link rel="apple-touch-icon" href="/icon-256x256.png"/>
+    <link rel="apple-touch-icon" href="/icon-512x512.png"/>
+    <meta name="apple-mobile-web-app-status-bar" content="#8b5cf6"/>
+    <meta name="theme-color" content="#8b5cf6"/>
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="pb-20">
