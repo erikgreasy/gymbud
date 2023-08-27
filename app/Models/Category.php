@@ -18,6 +18,10 @@ class Category extends Model
         static::addGlobalScope('order_by_name', function (Builder $builder) {
             $builder->orderBy('name');
         });
+
+        static::creating(function (Category $category) {
+            $category->user_id = auth()->id();
+        });
     }
 
     public function exercises(): HasMany
