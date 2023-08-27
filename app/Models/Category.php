@@ -20,7 +20,7 @@ class Category extends Model
         });
 
         static::creating(function (Category $category) {
-            $category->user_id = auth()->id();
+            $category->user_id = $category->user_id ?? auth()->id();
         });
     }
 

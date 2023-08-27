@@ -8,6 +8,8 @@ use Illuminate\Database\Seeder;
 
 class ExercisesSeeder extends Seeder
 {
+    private ?User $user = null;
+
     private array $categoriesWithExercises = [
         'Chest' => [
             'Bench press',
@@ -36,10 +38,12 @@ class ExercisesSeeder extends Seeder
 
     public function run(): void
     {
+        $userId = $this->user?->id ?? User::first()->id;
+
         collect($this->categoriesWithExercises)
-            ->each(function (array $exercises, string $categoryName) {
+            ->each(function (array $exercises, string $categoryName) use ($userId) {
                 $cat = Category::create([
-                    'user_id' => User::first()->id,
+                    'user_id' => $userId,
                     'name' => $categoryName
                 ]);
 
@@ -50,5 +54,12 @@ class ExercisesSeeder extends Seeder
                         ]);
                     });
             });
+    }
+
+    public function forUser(User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
     }
 }
