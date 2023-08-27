@@ -53,12 +53,23 @@ class RecordForm extends Component
     {
         $data = $this->validate();
 
-        $this->session->records()->create([
-            'weight' => $data['weight'],
-            'reps' => $data['reps'],
-            'exercise_id' => $data['exerciseId'],
-            'comment' => $data['comment'],
-        ]);
+        if ($this->record) {
+            $this->authorize('update', $this->record);
+
+            $this->record->update([
+                'weight' => $data['weight'],
+                'reps' => $data['reps'],
+                'exercise_id' => $data['exerciseId'],
+                'comment' => $data['comment'],
+            ]);
+        } else {
+            $this->session->records()->create([
+                'weight' => $data['weight'],
+                'reps' => $data['reps'],
+                'exercise_id' => $data['exerciseId'],
+                'comment' => $data['comment'],
+            ]);
+        }
 
         $this->redirect(route('sessions.show', ['session' => $this->session]), true);
     }

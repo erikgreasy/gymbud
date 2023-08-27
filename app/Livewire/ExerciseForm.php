@@ -32,6 +32,8 @@ class ExerciseForm extends Component
         $validated = $this->validate();
 
         if ($this->exercise) {
+            $this->authorize('update', $this->exercise);
+
             $this->exercise->update($validated);
         } else {
             Exercise::create($validated);

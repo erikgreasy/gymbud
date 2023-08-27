@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Session;
+use App\Models\User;
 
 class HomeController extends Controller
 {
     public function __invoke()
     {
+        /** @var User $user */
+        $user = auth()->user();
+
         return view('home', [
-            'sessions' => Session::with('records')->get(),
+            'sessions' => $user->sessions()->with('records')->get(),
         ]);
     }
 }

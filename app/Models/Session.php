@@ -23,6 +23,10 @@ class Session extends Model
         static::addGlobalScope('order_by_date', function (Builder $builder) {
             $builder->orderByDesc('date');
         });
+
+        static::creating(function (Session $session) {
+            $session->user_id = auth()->id();
+        });
     }
 
     public function records(): HasMany

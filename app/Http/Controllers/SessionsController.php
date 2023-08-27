@@ -8,6 +8,8 @@ class SessionsController extends Controller
 {
     public function show(Session $session)
     {
+        $this->authorize('view', $session);
+
         return view('sessions.show', [
             'session' => $session,
         ]);

@@ -2,34 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use App\Models\Exercise;
+use App\Models\User;
 
 class ExercisesController extends Controller
 {
     public function index()
     {
+        /** @var User $user */
+        $user = auth()->user();
+
         return view('exercises.index', [
-            'exercises' => Exercise::all()
+            'exercises' => $user->exercises,
         ]);
     }
 
     public function create()
     {
+        /** @var User $user */
+        $user = auth()->user();
+
         return view('exercises.create', [
-            'categories' => Category::all(),
+            'categories' => $user->categories,
         ]);
-    }
-
-    public function store()
-    {
-
     }
 
     public function edit(Exercise $exercise)
     {
+        $this->authorize('update', $exercise);
+
+        /** @var User $user */
+        $user = auth()->user();
+
         return view('exercises.edit', [
-            'categories' => Category::all(),
+            'categories' => $user->categories,
             'exercise' => $exercise,
         ]);
     }

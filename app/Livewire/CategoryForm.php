@@ -25,6 +25,8 @@ class CategoryForm extends Component
         $validated = $this->validate();
 
         if ($this->category) {
+            $this->authorize('update', $this->category);
+
             $this->category->update($validated);
         } else {
             Category::create($validated);
