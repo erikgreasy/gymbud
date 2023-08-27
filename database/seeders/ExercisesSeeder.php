@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class ExercisesSeeder extends Seeder
@@ -38,6 +39,7 @@ class ExercisesSeeder extends Seeder
         collect($this->categoriesWithExercises)
             ->each(function (array $exercises, string $categoryName) {
                 $cat = Category::create([
+                    'user_id' => User::first()->id,
                     'name' => $categoryName
                 ]);
 
