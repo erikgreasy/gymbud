@@ -31,9 +31,8 @@ class GoogleAuthController extends Controller
             ]
         );
 
-        (new ExercisesSeeder)->forUser($user)->run();
-
         if ($user->wasRecentlyCreated) {
+            (new ExercisesSeeder)->forUser($user)->run();
             event(new Registered($user));
         }
 
