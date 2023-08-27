@@ -28,12 +28,25 @@ class RecordForm extends Component
 
     public function mount()
     {
-        if ($this->record) {
-            $this->exerciseId = $this->record->exercise_id;
-            $this->weight = $this->record->weight;
-            $this->reps = $this->record->reps;
-            $this->comment = $this->record->comment;
+        if (!$this->record) {
+            $this->record = $this->session->lastRecord;
         }
+
+        $this->loadDataFromRecord();
+    }
+
+    /**
+     * Set properties for the form from the record property.
+     *
+     * The record property might be null in 'create' view or in 'edit' view
+     * when there is no record in session yet.
+     */
+    private function loadDataFromRecord(): void
+    {
+        $this->exerciseId = $this->record?->exercise_id;
+        $this->weight = $this->record?->weight;
+        $this->reps = $this->record?->reps;
+        $this->comment = $this->record?->comment;
     }
 
     public function submit()

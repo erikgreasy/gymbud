@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Session extends Model
 {
@@ -27,5 +28,10 @@ class Session extends Model
     public function records(): HasMany
     {
         return $this->hasMany(Record::class);
+    }
+
+    public function lastRecord(): HasOne
+    {
+        return $this->hasOne(Record::class)->latestOfMany();
     }
 }
