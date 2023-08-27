@@ -16,6 +16,13 @@
     <meta name="theme-color" content="#8b5cf6"/>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    {{--
+        Manually include style, because auto include doesn't happen when no livewire component is on the page.
+        That causes SPA with wire:navigate non working on some pages (pages that don't have livewire component in them),
+        because no script is loaded to handle navigation.
+    --}}
+    @livewireStyles
 </head>
 <body class="pb-20">
     <x-app-header/>
@@ -25,5 +32,12 @@
     </div>
 
     <x-mobile-nav/>
+
+    {{--
+        Manually include script, because auto include doesn't happen when no livewire component is on the page.
+        That causes SPA with wire:navigate non working on some pages (pages that don't have livewire component in them),
+        because no script is loaded to handle navigation.
+    --}}
+    @livewireScripts
 </body>
 </html>
