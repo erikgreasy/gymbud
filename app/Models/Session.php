@@ -25,7 +25,9 @@ class Session extends Model
         });
 
         static::creating(function (Session $session) {
-            $session->user_id = auth()->id();
+            if (!$session->user_id) {
+                $session->user_id = auth()->id();
+            }
         });
     }
 
