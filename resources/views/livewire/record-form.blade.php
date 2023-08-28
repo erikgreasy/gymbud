@@ -2,7 +2,7 @@
     <div>
         <label>
             Exercise:
-            <select wire:model="exerciseId">
+            <select wire:model="exerciseId" wire:change="updateExercisesData">
                 <option value="null" disabled>Choose exercise</option>
 
                 @foreach($exercises as $exercise)
@@ -56,5 +56,21 @@
         <x-button type="submit" button>
             Record
         </x-button>
+    </div>
+
+    <div class="mt-10">
+        @foreach($exercisesSessions as $session)
+            <div class="mb-5">
+                {{ $session->date }}
+
+                @foreach($session->records as $record)
+                    @if($record->exercise_id == $this->exerciseId)
+                        <div>
+                            {{ $record->weight }}kg x {{ $record->reps }}
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+        @endforeach
     </div>
 </form>

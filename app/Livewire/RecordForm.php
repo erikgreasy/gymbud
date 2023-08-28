@@ -3,12 +3,15 @@
 namespace App\Livewire;
 
 use App\Models\Record;
+use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 
 class RecordForm extends Component
 {
     public ?Record $record = null;
+
+    public $exercisesSessions = [];
 
     public $exercises;
 
@@ -47,6 +50,16 @@ class RecordForm extends Component
         $this->weight = $this->record?->weight;
         $this->reps = $this->record?->reps;
         $this->comment = $this->record?->comment;
+    }
+
+    public function updateExercisesData()
+    {
+        $user = auth()->user();
+
+        $this->exercisesSessions = $user->sessions()->with('records')->whereHas('records', function (Builder $query) {
+            $query->where('exercise_id', $this->exerciseId);
+        })
+            ->get();
     }
 
     public function submit()
