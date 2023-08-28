@@ -31,11 +31,11 @@ class RecordForm extends Component
 
     public function mount()
     {
-        if (!$this->record) {
-            $this->record = $this->session->lastRecord;
-        }
+        $prefillRecord = $this->record ?? $this->session->lastRecord ?? null;
 
-        $this->loadDataFromRecord();
+        if ($prefillRecord) {
+            $this->prefillFormFromRecord($prefillRecord);
+        }
     }
 
     /**
@@ -44,12 +44,12 @@ class RecordForm extends Component
      * The record property might be null in 'create' view or in 'edit' view
      * when there is no record in session yet.
      */
-    private function loadDataFromRecord(): void
+    private function prefillFormFromRecord(Record $record): void
     {
-        $this->exerciseId = $this->record?->exercise_id;
-        $this->weight = $this->record?->weight;
-        $this->reps = $this->record?->reps;
-        $this->comment = $this->record?->comment;
+        $this->exerciseId = $record?->exercise_id;
+        $this->weight = $record?->weight;
+        $this->reps = $record?->reps;
+        $this->comment = $record?->comment;
     }
 
     public function updateExercisesData()
