@@ -34,7 +34,8 @@ class RecordForm extends Component
         $prefillRecord = $this->record ?? $this->session->lastRecord ?? null;
 
         if ($prefillRecord) {
-            $this->prefillFormFromRecord($prefillRecord);
+            $this->prefillFormFromRecord($prefillRecord, $this->record !== null);
+            $this->updateExercisesData();
         }
     }
 
@@ -44,12 +45,15 @@ class RecordForm extends Component
      * The record property might be null in 'create' view or in 'edit' view
      * when there is no record in session yet.
      */
-    private function prefillFormFromRecord(Record $record): void
+    private function prefillFormFromRecord(Record $record, bool $isEdit = false): void
     {
         $this->exerciseId = $record?->exercise_id;
         $this->weight = $record?->weight;
         $this->reps = $record?->reps;
-        $this->comment = $record?->comment;
+
+        if ($isEdit) {
+            $this->comment = $record?->comment;
+        }
     }
 
     public function updateExercisesData()
