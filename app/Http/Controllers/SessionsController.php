@@ -11,7 +11,7 @@ class SessionsController extends Controller
         $this->authorize('view', $session);
 
         return view('sessions.show', [
-            'session' => $session,
+            'session' => $session->load(['records', 'records.exercise', 'records.session']),
         ]);
     }
 
