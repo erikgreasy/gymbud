@@ -26,7 +26,7 @@ class GoogleAuthController extends Controller
             ],
             [
                 'name' => $user->getName(),
-                'password' => encrypt('SomeRandom??Password123..'),
+                'password' => encrypt('Random?Password123.'),
                 'locale' => 'en',
             ]
         );
