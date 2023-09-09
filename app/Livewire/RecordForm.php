@@ -3,7 +3,9 @@
 namespace App\Livewire;
 
 use App\Models\Record;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 
@@ -56,8 +58,10 @@ class RecordForm extends Component
         }
     }
 
-    public function updateExercisesData()
+    #[On('exercise-changed')]
+    public function updateExercisesData(): void
     {
+        /** @var User $user */
         $user = auth()->user();
 
         $this->exercisesSessions = $user->sessions()->with('records')->whereHas('records', function (Builder $query) {
@@ -94,5 +98,33 @@ class RecordForm extends Component
     public function render()
     {
         return view('livewire.record-form');
+    }
+
+    #[On('exercise-changed')]
+    public function loadRecordForExercise(): void
+    {
+        /** @var User $user */
+        $user = auth()->user();
+
+        $prefillRecord = $user
+            ->records()
+            ->where('exercise_id', $this->exerciseId)
+            ->withAggregate('session', 'date')
+            ->orderByDesc('session_date')
+            ->oldest()
+            ->first();
+
+        if ($prefillRecord) {
+            $this->prefillFormFromRecord($prefillRecord);
+        } else {
+            $this->clearInputs();
+        }
+    }
+
+    private function clearInputs(): void
+    {
+        $this->weight = null;
+        $this->reps = null;
+        $this->comment = null;
     }
 }

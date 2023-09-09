@@ -2,7 +2,7 @@
     <div>
         <label>
             Exercise:
-            <select wire:model="exerciseId" wire:change="updateExercisesData">
+            <select wire:model="exerciseId" wire:change="$dispatch('exercise-changed')">
                 <option value="null" disabled>Choose exercise</option>
 
                 @foreach($exercises as $exercise)
