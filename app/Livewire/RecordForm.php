@@ -58,7 +58,6 @@ class RecordForm extends Component
         }
     }
 
-    #[On('exercise-changed')]
     public function updateExercisesData(): void
     {
         /** @var User $user */
@@ -68,6 +67,40 @@ class RecordForm extends Component
             $query->where('exercise_id', $this->exerciseId);
         })
             ->get();
+    }
+
+    #[On('exercise-changed')]
+    public function updateExerciseDataAndLoadRecord(): void
+    {
+        $this->updateExercisesData();
+        $this->loadRecordForExercise();
+    }
+
+    public function loadRecordForExercise(): void
+    {
+        /** @var User $user */
+        $user = auth()->user();
+
+        $prefillRecord = $user
+            ->records()
+            ->where('exercise_id', $this->exerciseId)
+            ->withAggregate('session', 'date')
+            ->orderByDesc('session_date')
+            ->oldest()
+            ->first();
+
+        if ($prefillRecord) {
+            $this->prefillFormFromRecord($prefillRecord);
+        } else {
+            $this->clearInputs();
+        }
+    }
+
+    private function clearInputs(): void
+    {
+        $this->weight = null;
+        $this->reps = null;
+        $this->comment = null;
     }
 
     public function submit()
@@ -98,33 +131,5 @@ class RecordForm extends Component
     public function render()
     {
         return view('livewire.record-form');
-    }
-
-    #[On('exercise-changed')]
-    public function loadRecordForExercise(): void
-    {
-        /** @var User $user */
-        $user = auth()->user();
-
-        $prefillRecord = $user
-            ->records()
-            ->where('exercise_id', $this->exerciseId)
-            ->withAggregate('session', 'date')
-            ->orderByDesc('session_date')
-            ->oldest()
-            ->first();
-
-        if ($prefillRecord) {
-            $this->prefillFormFromRecord($prefillRecord);
-        } else {
-            $this->clearInputs();
-        }
-    }
-
-    private function clearInputs(): void
-    {
-        $this->weight = null;
-        $this->reps = null;
-        $this->comment = null;
     }
 }
