@@ -1,6 +1,7 @@
 <form wire:submit="submit">
-    <div>
-        <select wire:model="category_id">
+    <div class="mb-4">
+        <x-input-label>Category:</x-input-label>
+        <x-select wire:model="category_id" class="block w-full">
             <option value="null" selected disabled>Choose category</option>
 
             @foreach($categories as $category)
@@ -8,21 +9,17 @@
                     {{ $category->name }}
                 </option>
             @endforeach
-        </select>
+        </x-select>
+        <x-input-error :messages="$errors->get('category_id')"/>
+    </div>
 
-        @error('category_id')
-        {{ $message }}
-        @enderror
+    <div class="mb-4">
+        <x-input-label>Name:</x-input-label>
+        <x-text-input wire:model="name" type="text" class="block w-full"/>
+        <x-input-error :messages="$errors->get('name')"/>
     </div>
 
     <div>
-        <label for="">
-            Name:
-            <input wire:model="name" type="text">
-        </label>
-    </div>
-
-    <div>
-        <x-button type="submit" button>Save</x-button>
+        <x-primary-button class="w-full">Save</x-primary-button>
     </div>
 </form>

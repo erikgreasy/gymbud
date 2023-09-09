@@ -1,9 +1,8 @@
 <form wire:submit="submit" action="">
-    <div>
-        <input wire:model="date" type="date">
-
-        @error('date') <span class="block">{{ $message }}</span> @enderror
+    <div class="mb-4">
+        <x-text-input wire:model="date" type="date" class="w-full"/>
+        <x-input-error :messages="$errors->get('date')"/>
     </div>
 
-    <x-button type="submit" button>Start session</x-button>
+    <x-primary-button class="w-full">Start session</x-primary-button>
 </form>
