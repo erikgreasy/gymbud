@@ -32,7 +32,7 @@
             <x-text-input
                 wire:model="weight"
                 type="number"
-                inputmode="numeric"
+                inputmode="decimal"
                 step="any"
                 class="flex-grow text-center"
             />
