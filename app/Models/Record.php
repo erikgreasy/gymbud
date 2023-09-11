@@ -10,8 +10,6 @@ class Record extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
-
     public function exercise(): BelongsTo
     {
         return $this->belongsTo(Exercise::class);
