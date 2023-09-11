@@ -12,8 +12,6 @@ class Exercise extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
-
     protected static function booted(): void
     {
         static::addGlobalScope('order_by_name', function (Builder $builder) {
