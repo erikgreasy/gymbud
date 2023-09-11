@@ -10,13 +10,15 @@ class SessionsController extends Controller
     {
         $this->authorize('view', $session);
 
-        $prevSession = Session::where([
+        $user = auth()->user();
+
+        $prevSession = $user->sessions()->where([
             ['date', '<=', $session->date],
             ['id', '!=', $session->id],
         ])
             ->first();
 
-        $nextSession = Session::where([
+        $nextSession = $user->sessions()->where([
             ['date', '>=', $session->date],
             ['id', '!=', $session->id],
         ])
