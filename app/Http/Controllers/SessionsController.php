@@ -10,8 +10,23 @@ class SessionsController extends Controller
     {
         $this->authorize('view', $session);
 
+        $prevSession = Session::where([
+            ['date', '<=', $session->date],
+            ['id', '!=', $session->id],
+        ])
+            ->first();
+
+        $nextSession = Session::where([
+            ['date', '>=', $session->date],
+            ['id', '!=', $session->id],
+        ])
+            ->withoutGlobalScope('order_by_date')
+            ->first();
+
         return view('sessions.show', [
             'session' => $session->load(['records', 'records.exercise', 'records.session']),
+            'prevSession' => $prevSession,
+            'nextSession' => $nextSession,
         ]);
     }
 
