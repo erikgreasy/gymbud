@@ -36,4 +36,11 @@ class SessionsController extends Controller
     {
         return view('sessions.create');
     }
+
+    public function destroy(Session $session)
+    {
+        $session->delete();
+
+        return redirect()->route('home');
+    }
 }

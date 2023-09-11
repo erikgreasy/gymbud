@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
     Route::get('/', HomeController::class)->name('home');
-    Route::resource('sessions', SessionsController::class)->only(['show', 'create']);
+    Route::resource('sessions', SessionsController::class)->only(['show', 'create', 'destroy']);
     Route::resource('sessions.records', RecordsController::class)->only(['create', 'edit', 'destroy'])->scoped();
     Route::resource('categories', CategoriesController::class)->only(['create', 'index', 'edit']);
     Route::resource('exercises', ExercisesController::class)->only(['index', 'create', 'store', 'edit']);
