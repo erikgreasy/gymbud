@@ -8,10 +8,21 @@
 
         @foreach($sessions as $session)
             <article class="border border-gray-400">
-                <header class="bg-gray-200">
-                    <a wire:navigate href="{{ route('sessions.show', ['session' => $session]) }}" class="block p-2">
+                <header class="bg-gray-200 flex justify-between p-2">
+                    <a wire:navigate href="{{ route('sessions.show', ['session' => $session]) }}" class="block">
                         {{ $session->date->format('d. M Y') }}
                     </a>
+
+                    <form
+                        action="{{ route('sessions.destroy', ['session' => $session]) }}"
+                        method="POST"
+                        onsubmit="return confirm('Are you sure?')"
+                    >
+                        @csrf
+                        @method('DELETE')
+
+                        <button class="inline-flex items-center text-red-600">DEL &times;</button>
+                    </form>
                 </header>
 
                 <main>
