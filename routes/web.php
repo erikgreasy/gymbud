@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\ExerciseMergeController;
 use App\Http\Controllers\ExercisesController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocaleSettingsController;
@@ -26,6 +27,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('sessions.records', RecordsController::class)->only(['create', 'edit', 'destroy'])->scoped();
     Route::resource('categories', CategoriesController::class)->only(['create', 'index', 'edit']);
     Route::resource('exercises', ExercisesController::class)->only(['index', 'create', 'store', 'edit']);
+    Route::get('exercises/{exercise}/merge', [ExerciseMergeController::class, 'create'])->name('exercises.merge');
+    Route::post('exercises/{exercise}/merge', [ExerciseMergeController::class, 'store'])->name('exercises.merge.store');
     Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
     Route::get('settings/locale', [LocaleSettingsController::class, 'edit'])->name('settings.locale');
     Route::post('settings/locale', [LocaleSettingsController::class, 'update']);
