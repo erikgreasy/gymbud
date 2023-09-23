@@ -2,8 +2,13 @@
 
 namespace App\Livewire;
 
+use App\Actions\CreateRecordForSession;
+use App\Actions\UpdateRecord;
+use App\Models\Exercise;
+use App\Models\PersonalRecord;
 use App\Models\Record;
 use App\Models\User;
+use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
@@ -110,19 +115,35 @@ class RecordForm extends Component
         if ($this->record) {
             $this->authorize('update', $this->record);
 
-            $this->record->update([
-                'weight' => $data['weight'],
-                'reps' => $data['reps'],
-                'exercise_id' => $data['exerciseId'],
-                'comment' => $data['comment'],
-            ]);
+            $record = app(UpdateRecord::class)->execute(
+                $this->record,
+                Exercise::find($this->exerciseId),
+                $data['weight'],
+                $data['reps'],
+                $data['comment']
+            );
+
+            if ($record->is_pr && !$this->record->is_pr) {
+                Notification::make()
+                    ->title("New {$record->reps} reps PR!")
+                    ->success()
+                    ->send();
+            }
         } else {
-            $this->session->records()->create([
-                'weight' => $data['weight'],
-                'reps' => $data['reps'],
-                'exercise_id' => $data['exerciseId'],
-                'comment' => $data['comment'],
-            ]);
+            $record = app(CreateRecordForSession::class)->execute(
+                $this->session,
+                Exercise::find($this->exerciseId),
+                $data['weight'],
+                $data['reps'],
+                $data['comment'],
+            );
+
+            if ($record->is_pr) {
+                Notification::make()
+                    ->title("New {$record->reps} reps PR!")
+                    ->success()
+                    ->send();
+            }
         }
 
         $this->redirect(route('sessions.show', ['session' => $this->session]), true);

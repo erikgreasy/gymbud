@@ -52,4 +52,9 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough(Record::class, Session::class);
     }
+
+    public function personalRecords(): HasMany
+    {
+        return $this->hasMany(PersonalRecord::class);
+    }
 }

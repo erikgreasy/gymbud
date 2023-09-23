@@ -23,6 +23,7 @@
         That causes SPA with wire:navigate non working on some pages (pages that don't have livewire component in them),
         because no script is loaded to handle navigation.
     --}}
+    @filamentStyles
     @livewireStyles
 </head>
 <body class="pb-20">
@@ -39,6 +40,8 @@
         That causes SPA with wire:navigate non working on some pages (pages that don't have livewire component in them),
         because no script is loaded to handle navigation.
     --}}
+    @livewire('notifications')
+    @filamentScripts
     @livewireScripts
 </body>
 </html>
