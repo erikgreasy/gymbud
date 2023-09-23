@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\FillPersonalRecordsForExercise;
 use App\Models\Record;
 use App\Models\Session;
 use App\Models\User;
@@ -33,11 +34,14 @@ class RecordsController extends Controller
         ]);
     }
 
-    public function destroy(Session $session, Record $record)
+    public function destroy(Session $session, Record $record, FillPersonalRecordsForExercise $fillPersonalRecordsForExercise)
     {
         $this->authorize('delete', $record);
 
+        $exercise = $record->exercise;
         $record->delete();
+
+        $fillPersonalRecordsForExercise->execute($exercise);
 
         return redirect()->route('sessions.show', ['session' => $session]);
     }

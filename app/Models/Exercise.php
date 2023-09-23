@@ -19,6 +19,16 @@ class Exercise extends Model
         });
     }
 
+    public function prFor(int $reps): ?Record
+    {
+        return $this->prs->where('reps', $reps)->first();
+    }
+
+    public function prs(): HasMany
+    {
+        return $this->records()->prs();
+    }
+
     public function records(): HasMany
     {
         return $this->hasMany(Record::class);

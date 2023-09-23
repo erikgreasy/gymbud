@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Actions\RecalculatePersonalRecords;
 use App\Models\Exercise;
 use App\Models\Record;
 use App\Models\Session;
@@ -33,5 +34,7 @@ class DatabaseSeeder extends Seeder
                 Record::factory(12)->state(fn () => ['exercise_id' => $exercises->random()->id])
             )
             ->create();
+
+        app(RecalculatePersonalRecords::class)->execute();
     }
 }
