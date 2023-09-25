@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\ExerciseMergeController;
 use App\Http\Controllers\ExercisesController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ImportSettingsController;
 use App\Http\Controllers\LocaleSettingsController;
 use App\Http\Controllers\RecordsController;
 use App\Http\Controllers\SessionsController;
@@ -29,9 +30,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('exercises', ExercisesController::class)->only(['index', 'create', 'store', 'edit']);
     Route::get('exercises/{exercise}/merge', [ExerciseMergeController::class, 'create'])->name('exercises.merge');
     Route::post('exercises/{exercise}/merge', [ExerciseMergeController::class, 'store'])->name('exercises.merge.store');
+
     Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
     Route::get('settings/locale', [LocaleSettingsController::class, 'edit'])->name('settings.locale');
     Route::post('settings/locale', [LocaleSettingsController::class, 'update']);
+    Route::get('settings/import', [ImportSettingsController::class, 'edit'])->name('settings.import');
+    Route::post('settings/import', [ImportSettingsController::class, 'update']);
 });
 
 require __DIR__ . '/auth.php';
