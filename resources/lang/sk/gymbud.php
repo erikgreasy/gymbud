@@ -5,6 +5,7 @@ return [
 
     'settings' => [
         'change_locale' => 'Zmeniť jazyk',
+        'import' => 'Import',
     ],
 
     'navigation' => [

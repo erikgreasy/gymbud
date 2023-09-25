@@ -1,8 +1,13 @@
 <x-layouts.app>
     <ul class="space-y-5">
         <li>
-            <a href="{{ route('settings.locale') }}">
+            <a href="{{ route('settings.locale') }}" wire:navigate>
                 {{ __('gymbud.settings.change_locale') }}
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('settings.import') }}" wire:navigate>
+                {{ __('gymbud.settings.import') }}
             </a>
         </li>
         <li>
