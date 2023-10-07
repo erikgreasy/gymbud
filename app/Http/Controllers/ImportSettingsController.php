@@ -61,7 +61,7 @@ class ImportSettingsController extends Controller
         collect($importData)->each(function (array $item) use ($user) {
             $category = $user->categories()->firstOrCreate(
                 [
-                    'name' => $item['exercise']
+                    'name' => $item['category']
                 ]
             );
 
