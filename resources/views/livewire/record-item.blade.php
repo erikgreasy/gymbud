@@ -1,7 +1,13 @@
 <tr wire:key="asd_{{ $record->id }}">
     <td class="p-2">
         <span class="inline-flex gap-x-2 items-center">
-            {{ $record->exercise->name }}
+            <a
+                href="{{ route('sessions.exercises.show', ['session' => $record->session, 'exercise' => $record->exercise]) }}"
+                wire:navigate
+            >
+                {{ $record->exercise->name }}
+            </a>
+
             @if($record->is_pr)
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                      stroke-width="1.5"
