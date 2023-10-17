@@ -5,12 +5,10 @@ namespace App\Livewire;
 use App\Actions\CreateRecordForSession;
 use App\Actions\UpdateRecord;
 use App\Models\Exercise;
-use App\Models\PersonalRecord;
 use App\Models\Record;
-use App\Models\User;
+use App\Models\Session;
 use Filament\Notifications\Notification;
-use Illuminate\Database\Eloquent\Builder;
-use Livewire\Attributes\On;
+use Illuminate\Database\Eloquent\Collection;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 
@@ -18,32 +16,40 @@ class RecordForm extends Component
 {
     public ?Record $record = null;
 
-    public $exercisesSessions = [];
+    public Exercise $exercise;
 
-    public $exercises;
+    /** @var Collection<Record> */
+    public Collection $sessionRecords;
 
-    public $session;
+    public Session $session;
 
-    #[Rule(['required', 'exists:exercises,id'])]
-    public $exerciseId = null;
-
-    #[Rule(['required', 'numeric', 'min:0'])]
-    public $weight;
+    public bool $isEditing = false;
 
     #[Rule(['required', 'numeric', 'min:0'])]
-    public $reps;
+    public ?float $weight;
+
+    #[Rule(['required', 'numeric', 'min:0'])]
+    public ?int $reps;
 
     #[Rule(['nullable', 'string'])]
-    public $comment;
+    public ?string $comment;
 
     public function mount()
     {
-        $prefillRecord = $this->record ?? $this->session->lastRecord ?? null;
+        $prefillRecord = $this->exercise->lastRecord;
+        $this->getSessionRecords();
 
         if ($prefillRecord) {
             $this->prefillFormFromRecord($prefillRecord, $this->record !== null);
-            $this->updateExercisesData();
         }
+    }
+
+    /**
+     * @return void
+     */
+    public function getSessionRecords(): void
+    {
+        $this->sessionRecords = $this->exercise->records()->where('session_id', $this->session->id)->get();
     }
 
     /**
@@ -54,7 +60,6 @@ class RecordForm extends Component
      */
     private function prefillFormFromRecord(Record $record, bool $isEdit = false): void
     {
-        $this->exerciseId = $record?->exercise_id;
         $this->weight = $record?->weight;
         $this->reps = $record?->reps;
 
@@ -63,61 +68,16 @@ class RecordForm extends Component
         }
     }
 
-    public function updateExercisesData(): void
-    {
-        /** @var User $user */
-        $user = auth()->user();
-
-        $this->exercisesSessions = $user->sessions()->with('records')->whereHas('records', function (Builder $query) {
-            $query->where('exercise_id', $this->exerciseId);
-        })
-            ->get();
-    }
-
-    #[On('exercise-changed')]
-    public function updateExerciseDataAndLoadRecord(): void
-    {
-        $this->updateExercisesData();
-        $this->loadRecordForExercise();
-    }
-
-    public function loadRecordForExercise(): void
-    {
-        /** @var User $user */
-        $user = auth()->user();
-
-        $prefillRecord = $user
-            ->records()
-            ->where('exercise_id', $this->exerciseId)
-            ->withAggregate('session', 'date')
-            ->orderByDesc('session_date')
-            ->oldest()
-            ->first();
-
-        if ($prefillRecord) {
-            $this->prefillFormFromRecord($prefillRecord);
-        } else {
-            $this->clearInputs();
-        }
-    }
-
-    private function clearInputs(): void
-    {
-        $this->weight = null;
-        $this->reps = null;
-        $this->comment = null;
-    }
-
-    public function submit()
+    public function submit(): void
     {
         $data = $this->validate();
 
-        if ($this->record) {
+        if ($this->isEditing) {
             $this->authorize('update', $this->record);
 
             $record = app(UpdateRecord::class)->execute(
                 $this->record,
-                Exercise::find($this->exerciseId),
+                $this->exercise,
                 $data['weight'],
                 $data['reps'],
                 $data['comment']
@@ -129,10 +89,14 @@ class RecordForm extends Component
                     ->success()
                     ->send();
             }
+
+            $this->isEditing = false;
+            $this->comment = null;
+            $this->record = null;
         } else {
             $record = app(CreateRecordForSession::class)->execute(
                 $this->session,
-                Exercise::find($this->exerciseId),
+                $this->exercise,
                 $data['weight'],
                 $data['reps'],
                 $data['comment'],
@@ -146,7 +110,27 @@ class RecordForm extends Component
             }
         }
 
-        $this->redirect(route('sessions.show', ['session' => $this->session]), true);
+        $this->getSessionRecords();
+    }
+
+    public function cancelEditing(): void
+    {
+        $this->record = null;
+        $this->isEditing = false;
+    }
+
+    public function editRecord(int $recordId): void
+    {
+        $this->record = $this->sessionRecords->find($recordId);
+        $this->isEditing = true;
+        $this->prefillFormFromRecord($this->record, true);
+    }
+
+    public function deleteRecord(int $recordId): void
+    {
+        $this->cancelEditing();
+        $this->sessionRecords->find($recordId)->delete();
+        $this->getSessionRecords();
     }
 
     public function render()

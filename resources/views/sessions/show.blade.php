@@ -27,23 +27,14 @@
         </div>
 
         <div class="mb-3">
-            <x-button href="{{ route('sessions.records.create', ['session' => $session]) }}">
+            <x-button href="{{ route('sessions.exercises.index', ['session' => $session]) }}">
                 Add record
             </x-button>
         </div>
 
-        <article class="border border-gray-400">
-            <header class="bg-gray-200 p-2">
-                {{ $session->date }}
-            </header>
-
-            <main>
-                <table class="w-full">
-                    @foreach($session->records as $record)
-                        <livewire:record-item :record="$record"/>
-                    @endforeach
-                </table>
-            </main>
-        </article>
+        <x-records-table
+            :title="$session->date"
+            :records="$session->records"
+        />
     </div>
 </x-layouts.app>

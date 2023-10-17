@@ -12,7 +12,7 @@ class HomeController extends Controller
         $user = auth()->user();
 
         return view('home', [
-            'sessions' => $user->sessions()->with(['records', 'records.exercise'])->get(),
+            'sessions' => $user->sessions()->with(['records', 'records.exercise', 'records.session'])->get(),
         ]);
     }
 }

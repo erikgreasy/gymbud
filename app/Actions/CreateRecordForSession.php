@@ -69,8 +69,10 @@ class CreateRecordForSession
     {
         $exercise
             ->prs
-            ->where('weight', '<=', $weight)
-            ->where('reps', '<', $reps)
+            ->filter(function (Record $record) use ($weight, $reps) {
+                return ($record->weight <= $weight && $record->reps < $reps) ||
+                    ($record->weight < $weight && $record->reps <= $reps);
+            })
             ->each(fn (Record $pr) => $pr->update(['is_pr' => false]));
 
     }
