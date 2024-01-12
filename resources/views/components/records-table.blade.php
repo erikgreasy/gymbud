@@ -39,6 +39,7 @@
                                 </svg>
                             @endif
                         </div>
+                        <small>{{ $record->comment }}</small>
                     </td>
 
                     <td class="p-2">
